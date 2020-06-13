@@ -5,7 +5,7 @@ var sheet1 = ss.getSheetByName("Dollaro"); //Get values
   var source=sheet1.getRange("A1:A2").getValues();
   NumR=source[0];
   Doll=source[1];
-   Logger.log("sourc="+source+" NumR="+NumR+"  Doll"+Doll);
+   Logger.log("sourc11="+source+" NumR="+NumR+"  Doll"+Doll);
  // sheet1.getRange("A3").setValue(Doll);
   var ora=new Date();
   sheet1.getRange("C1").setValue(ora);
