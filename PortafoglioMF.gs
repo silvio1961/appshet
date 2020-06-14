@@ -193,6 +193,7 @@ function Modifica(NumRDest) {
    sheetDest.getRange(NumRDest,3,1,1).setValues(sh.getRange("B3").getValues());
   sheetDest.getRange(NumRDest,5,1,2).setValues(sh.getRange("C3:D3").getValues());
    sheetDest.getRange(NumRDest,8,1,1).setValues(sh.getRange("E3").getValues());
+    sh.getRange("G3:I3").setValues(sh.getRange("G4:I4").getValues());
   Resetta();
   
       }  
@@ -208,153 +209,43 @@ function onEdit(e) {
      var col=sh.getActiveCell().getColumn();
  Logger.log("riga?"+riga+" col="+col+" nome="+ss.getName());
 if (ss.getName() == 'Operazioni per titolo') {   // nascondi Verifiche
- if((col==7) && (riga==3)) Modifica();  
+   if((col==7) && (riga==3)) Modifica(sh.getRange("J1").getValue()); 
+  if((col==8) && (riga==3)) {
+
+     var currentRow = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Operazioni").getLastRow();
+      var sourceRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Operazioni").getRange(currentRow, 18);
+         var sourceFormulas = sourceRange.getFormulasR1C1();
+    Modifica(sh.getRange("J3").getValue());  
+    currentRow++;
+         var targetRange =SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Operazioni").getRange(currentRow, 10);
+         targetRange.setFormulasR1C1(sourceFormulas);
+  }  
+    if((col==9) && (riga==3)) {
+       
+         var NumRDest=sh.getRange("J1").getValue();
+         Logger.log("NumRDest="+NumRDest);      
+        SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Operazioni").deleteRow(NumRDest);
+       Resetta();
+      sh.getRange("G3:I3").setValues(sh.getRange("G4:I4").getValues());
+     
+      } 
   if((col==5) && (riga>4)) {
-       var ID = sh.getRange(riga,col-1).getValue();
+  //   sh.getRange(sh.getRange("J6").getValue(),col).setValue(sh.getRange("G2").getValue());  
+    var ID = sh.getRange(riga,col-1).getValue();
         sh.getRange("J1").setValue(ID);
-      sh.getRange("E5:E50").setValues(sh.getRange("F5:F50").getValues());
+  // sh.getRange(8,5,riga-7,1).setValues(sh.getRange(8,6,riga-8,1).getValues());
+    //  sh.getRange(riga+1,5,100-riga,1).setValues(sh.getRange(riga+1,6,100-riga,1).getValues());
+      sh.getRange("E8:E50").setValues(sh.getRange("F8:F50").getValues());
+        sh.getRange(riga,col).setValue(sh.getRange("J2").getValue());
     sh.getRange("A3:E3").setValues(sh.getRange("A2:E2").getValues());
+    
+ //  sh.getRange("J6").setValue(riga);
+    
+
                                                                     
     }
 
 }
 }
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function CancellaDatiGior() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var sheetSorg = ss.getSheetByName("guad-perd5m"); 
-    var NumrSorg=sheetSorg.getRange("A1").getValue()+1;
- sheetSorg.getRange(2, 2,NumrSorg,10).clear();
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function Datigiorn3() {
- var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var sheetSorg = ss.getSheetByName("guad-perd5m");
-  
-  Logger.log("Numr="+Numr);
-  var source=sheetSorg.getRange("J10:X10").getValues();
-  Logger.log(source);
-    var sheetDest = ss.getSheetByName("DatiGiorn");
-  var Numr=sheetDest.getRange("A1").getValue();
-  sheetDest.getRange(Numr+2,2,1,15).setValues(source);
-  
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-  
-  
-  
-
-
-function guadagn5min() {
-  var result = new Array(12); //Sort by date
-  result[0] = new Date();
- var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetgua = ss.getSheetByName("guad-perd5m"); //Store
-  var ok=ss.getRangeByName("OraOk").getValue();
-  
-  var sheetrag=ss.getSheetByName("raggrup");   
- 
-  if(ok) {
-    
-    var iniz=sheetgua.getRange("A1").getValue();
-
-    var valo = sheetrag.getRange("G23:N23").getValues();
-        Logger.log("sour="+valo);
-    ss.getSheetByName("guad-perd5m").getRange(2+iniz,2,1,8).setValues(valo);
-  }  
-  
-}
-//////////////////////////////////
-function maximo2() {
-  
-var ss = SpreadsheetApp.getActiveSpreadsheet();
- var sheet = ss.getSheetByName("Operaz Aperte"); //Store
- 
-    range=ss.getRangeByName("RecOpAp");
-  range1=ss.getRangeByName("RecOpAp1");
-  MinR=ss.getRangeByName("RigaMinOp").getValue();
-  MaxR=ss.getRangeByName("RigaMaxOp").getValue();
- 
-  MinRsw=sheet.getRange("I1").getValue();
-  MaxRsw=sheet.getRange("J1").getValue();
-  NumRsw=MaxRsw-MinRsw+1;
-   NumR=MaxR-MinR+1;
- 
-  source=range.getValues();
-     Logger.log("NumR="+NumR+" NumRsw="+NumRsw);
- dest=ss.getRangeByName("RecOpAp1").getValues();
-  for(k=0;k<2;k++) {
-    if(k==0) {
-         range=ss.getRangeByName("RecOpAp");
-         range1=ss.getRangeByName("RecOpAp1");
-         MinR=ss.getRangeByName("RigaMinOp").getValue();
-         MaxR=ss.getRangeByName("RigaMaxOp").getValue();   
-    }  
-    else {
-       range=ss.getRangeByName("RecOpApSw");
-       range1=ss.getRangeByName("RecOpApSw1");
-       MinR=sheet.getRange("I1").getValue();
-       MaxR=sheet.getRange("J1").getValue();
-        
-    }  
-    dest=range1.getValues();
-    source=range.getValues();
-    
-    NumR=MaxR-MinR+1;
-    for(i=0;i<NumR;i++) {
-    
-      valatt=source[i][0];
-      maxim=source[i][1];
-      minim=source[i][2];
-//    Logger.log("i="+i+" valatt="+valatt+" minim="+minim +" maxim="+maxim);
-      if(valatt>maxim) dest[i][0]=valatt;
-      if(valatt<minim) dest[i][1]=valatt;
-      minim=dest[i][1];
-      maxim=dest[i][0];
-  //      Logger.log("dopo i="+i+" minim="+minim +" maxim="+maxim);
-    
-    }
-    if(k==0) range1=ss.getRangeByName("RecOpAp1");
-    else range1=ss.getRangeByName("RecOpApSw1");
-    range1.setValues(dest);
-
-  }   
-}
-
-
-/////////////////////////////////////////////////////////
-function aggiorna() {
-var d1 = new Date();
-var d2 = new Date(2017,3, 18, 17, 30, 0, 0);
-var d3 = new Date(2017,3, 18, 9, 31, 0, 0);
-ora1=d1.getHours();
-min1=d1.getMinutes();
-totor1=ora1*60+min1;
-ora2=d2.getHours();
-min2=d2.getMinutes();
-totor2=ora2*60+min2;
-ora3=d3.getHours();
-min3=d3.getMinutes();
-totor3=ora3*60+min3;
-Logger.log(" ora att"+totor1);
-Logger.log(" ora iniz="+totor2);
-Logger.log(" ora fin="+totor3);
-   maximo();
-if((totor1>totor3) && (totor1<totor2)) {
-Logger.log( "ehhjksllo");
-   
-}    
-}
-
-
-
-
 
 
