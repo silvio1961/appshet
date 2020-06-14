@@ -232,17 +232,20 @@ var sheet1 = ss.getSheetByName("Dollaro"); //Get values
 
 
 function onEdit(e) {  
+  if (!e || e.value === undefined)     return;
+  const edited = e.range;
+  const ss = edited.getSheet();
+  var sh = SpreadsheetApp.getActiveSheet();
+   var riga=sh.getActiveCell().getRow();
+     //  sheet.getActiveCell().getRow();
+     var col=sh.getActiveCell().getColumn();
+ Logger.log("riga?"+riga+" col="+col);
+if (ss.getName() == 'Operazioni per titolo') {   // nascondi Verifiche
+    if((col==6) && (riga>4)) {
+    sh.getRange("E5:E50").setValues(sh.getRange("F5:F50").getValues());
+                                                                    
 
-  ss = SpreadsheetApp.getActiveSpreadsheet();  
-  var sheet = ss.getActiveSheet(); 
-
-      riga=e.range.getRow();
-     col=e.range.getColumn();
-  Logger.log("riga"+riga+" colonna="+col);
- 
-if (e.range.getSheet().getName() == 'Operazioni') {   // nascondi Verifiche
-
-
+}
 }
 }
 
